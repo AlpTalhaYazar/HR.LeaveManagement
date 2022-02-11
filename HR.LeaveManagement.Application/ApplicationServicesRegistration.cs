@@ -1,13 +1,17 @@
-﻿using System.Reflection;
+﻿using MediatR;
 using Microsoft.Extensions.DependencyInjection;
+using System.Reflection;
 
 namespace HR.LeaveManagement.Application
 {
     public static class ApplicationServicesRegistration
     {
-        public static void ConfigureApplicationServices(this IServiceCollection serviceCollection)
+        public static IServiceCollection ConfigureApplicationServices(this IServiceCollection serviceCollection)
         {
             serviceCollection.AddAutoMapper(Assembly.GetExecutingAssembly());
+            serviceCollection.AddMediatR(Assembly.GetExecutingAssembly());
+
+            return serviceCollection;
         }
     }
 }
