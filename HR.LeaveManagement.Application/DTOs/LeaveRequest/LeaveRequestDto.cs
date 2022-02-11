@@ -1,4 +1,5 @@
 ﻿using HR.LeaveManagement.Application.DTOs.Common;
+using HR.LeaveManagement.Application.DTOs.LeaveType;
 
 namespace HR.LeaveManagement.Application.DTOs.LeaveRequest
 {
@@ -10,7 +11,7 @@ namespace HR.LeaveManagement.Application.DTOs.LeaveRequest
         public int LeaveTypeId { get; set; }
         public DateTime DateRequested { get; set; }
         public string RequestComments { get; set; }
-        public DateTime DateActioned { get; set; }
+        public DateTime? DateActioned { get; set; }
         public bool? IsApproved { get; set; }
         public bool IsCancelled { get; set; }
     }
