@@ -1,4 +1,6 @@
 ﻿using AutoMapper;
+using HR.LeaveManagement.Application.DTOs.LeaveAllocation.Validators;
+using HR.LeaveManagement.Application.Exceptions;
 using HR.LeaveManagement.Application.Features.LeaveAllocations.Requests.Commands;
 using HR.LeaveManagement.Application.Persistance.Contracts;
 using MediatR;
@@ -8,19 +10,27 @@ namespace HR.LeaveManagement.Application.Features.LeaveAllocations.Handlers.Comm
     internal class UpdateLeaveAllocationCommandHandler : IRequestHandler<UpdateLeaveAllocationCommand, Unit>
     {
         private readonly ILeaveAllocationRepository _leaveAllocationRepository;
+        private readonly ILeaveTypeRepository _leaveTypeRepository;
         private readonly IMapper _mapper;
 
-        public UpdateLeaveAllocationCommandHandler(ILeaveAllocationRepository leaveAllocationRepository, IMapper mapper)
+        public UpdateLeaveAllocationCommandHandler(ILeaveAllocationRepository leaveAllocationRepository, IMapper mapper, ILeaveTypeRepository leaveTypeRepository)
         {
             _leaveAllocationRepository = leaveAllocationRepository;
+            _leaveTypeRepository = leaveTypeRepository;
             _mapper = mapper;
         }
 
         public async Task<Unit> Handle(UpdateLeaveAllocationCommand request, CancellationToken cancellationToken)
         {
-            var leaveAllocation = await _leaveAllocationRepository.GetByIdAsync(request.LeaveAllocationDto.Id);
+            var validator = new UpdateLeaveAllocationDtoValidator(_leaveTypeRepository);
+            var validationResult = await validator.ValidateAsync(request.UpdateLeaveAllocationDto);
 
-            _mapper.Map(request.LeaveAllocationDto, leaveAllocation);
+            if (!validationResult.IsValid)
+                throw new ValidationException(validationResult);
+
+            var leaveAllocation = await _leaveAllocationRepository.GetByIdAsync(request.UpdateLeaveAllocationDto.Id);
+
+            _mapper.Map(request.UpdateLeaveAllocationDto, leaveAllocation);
 
             await _leaveAllocationRepository.UpdateAsync(leaveAllocation);
 
