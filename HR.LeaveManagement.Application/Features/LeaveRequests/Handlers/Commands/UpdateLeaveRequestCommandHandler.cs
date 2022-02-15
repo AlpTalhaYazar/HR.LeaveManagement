@@ -20,9 +20,9 @@ namespace HR.LeaveManagement.Application.Features.LeaveRequests.Handlers.Command
         {
             var leaveRequest = await _leaveRequestRepository.GetByIdAsync(request.Id);
 
-            if (request.LeaveRequestDto != null)
+            if (request.UpdateLeaveRequestDto != null)
             {
-                _mapper.Map(request.LeaveRequestDto, leaveRequest);
+                _mapper.Map(request.UpdateLeaveRequestDto, leaveRequest);
 
                 await _leaveRequestRepository.UpdateAsync(leaveRequest);
             }
