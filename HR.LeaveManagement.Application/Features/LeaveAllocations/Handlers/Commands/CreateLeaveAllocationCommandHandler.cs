@@ -3,12 +3,13 @@ using HR.LeaveManagement.Application.DTOs.LeaveAllocation.Validators;
 using HR.LeaveManagement.Application.Exceptions;
 using HR.LeaveManagement.Application.Features.LeaveAllocations.Requests.Commands;
 using HR.LeaveManagement.Application.Persistance.Contracts;
+using HR.LeaveManagement.Application.Responses;
 using HR.LeaveManagement.Domain;
 using MediatR;
 
 namespace HR.LeaveManagement.Application.Features.LeaveAllocations.Handlers.Commands
 {
-    public class CreateLeaveAllocationCommandHandler : IRequestHandler<CreateLeaveAllocationCommand, int>
+    public class CreateLeaveAllocationCommandHandler : IRequestHandler<CreateLeaveAllocationCommand, BaseCommandResponse>
     {
         private readonly ILeaveAllocationRepository _leaveAllocationRepository;
         private readonly ILeaveTypeRepository _leaveTypeRepository;
@@ -21,19 +22,29 @@ namespace HR.LeaveManagement.Application.Features.LeaveAllocations.Handlers.Comm
             _mapper = mapper;
         }
 
-        public async Task<int> Handle(CreateLeaveAllocationCommand request, CancellationToken cancellationToken)
+        public async Task<BaseCommandResponse> Handle(CreateLeaveAllocationCommand request, CancellationToken cancellationToken)
         {
+            var response = new BaseCommandResponse();
             var validator = new CreateLeaveAllocationDtoValidator(_leaveTypeRepository);
             var validationResult = await validator.ValidateAsync(request.LeaveAllocationDto);
 
             if (!validationResult.IsValid)
-                throw new ValidationException(validationResult);
+            {
+                response.IsSucceeded = false;
+                response.Message = "Creation Failed.";
+                response.Errors = validationResult.Errors.Select(x => x.ErrorMessage).ToList();
+            }
+            else
+            {
+                var leaveAllocation = _mapper.Map<LeaveAllocation>(request.LeaveAllocationDto);
 
-            var leaveAllocation = _mapper.Map<LeaveAllocation>(request.LeaveAllocationDto);
+                leaveAllocation = await _leaveAllocationRepository.AddAsync(leaveAllocation);
 
-            leaveAllocation = await _leaveAllocationRepository.AddAsync(leaveAllocation);
-
-            return leaveAllocation.Id;
+                response.IsSucceeded = true;
+                response.Message = "Creation Successful.";
+                response.Id = leaveAllocation.Id;
+            }
+            return response;
         }
     }
 }
