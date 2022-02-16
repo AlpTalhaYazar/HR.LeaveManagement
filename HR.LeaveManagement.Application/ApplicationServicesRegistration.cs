@@ -6,12 +6,12 @@ namespace HR.LeaveManagement.Application
 {
     public static class ApplicationServicesRegistration
     {
-        public static IServiceCollection ConfigureApplicationServices(this IServiceCollection serviceCollection)
+        public static IServiceCollection ConfigureApplicationServices(this IServiceCollection services)
         {
-            serviceCollection.AddAutoMapper(Assembly.GetExecutingAssembly());
-            serviceCollection.AddMediatR(Assembly.GetExecutingAssembly());
+            services.AddAutoMapper(Assembly.GetExecutingAssembly());
+            services.AddMediatR(Assembly.GetExecutingAssembly());
 
-            return serviceCollection;
+            return services;
         }
     }
 }

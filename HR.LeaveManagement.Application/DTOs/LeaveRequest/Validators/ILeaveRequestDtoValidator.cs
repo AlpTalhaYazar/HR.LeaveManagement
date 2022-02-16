@@ -24,7 +24,7 @@ namespace HR.LeaveManagement.Application.DTOs.LeaveRequest.Validators
                     .WithMessage("{PropertyName} has to be greater than 0.")
                 .MustAsync(async (id, token) =>
                 {
-                    var leaveTypeIdExists = await _leaveTypeRepository.IsExists(id);
+                    var leaveTypeIdExists = await _leaveTypeRepository.IsExist(id);
                     return !leaveTypeIdExists;
 
                 }).WithMessage("{PropertyName} does not exist.");
