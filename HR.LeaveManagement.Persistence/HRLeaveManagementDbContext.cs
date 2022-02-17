@@ -6,7 +6,7 @@ namespace HR.LeaveManagement.Persistence
 {
     public class HRLeaveManagementDbContext : DbContext
     {
-        public HRLeaveManagementDbContext(DbContextOptions<HRLeaveManagementDbContext> options)
+        public HRLeaveManagementDbContext(DbContextOptions<HRLeaveManagementDbContext> options) : base(options)
         {
         }
 
