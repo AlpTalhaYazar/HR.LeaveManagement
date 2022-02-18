@@ -5,7 +5,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace HR.LeaveManagement.Persistence.Migrations
 {
-    public partial class InitialCreation : Migration
+    public partial class Initialization : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -81,6 +81,16 @@ namespace HR.LeaveManagement.Persistence.Migrations
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 });
+
+            migrationBuilder.InsertData(
+                table: "LeaveTypes",
+                columns: new[] { "Id", "CreatedBy", "DateCreated", "DefaultDays", "LastModified", "LastModifiedBy", "Name" },
+                values: new object[] { 1, "Talha", new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), 10, new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), "Talha", "Vacation" });
+
+            migrationBuilder.InsertData(
+                table: "LeaveTypes",
+                columns: new[] { "Id", "CreatedBy", "DateCreated", "DefaultDays", "LastModified", "LastModifiedBy", "Name" },
+                values: new object[] { 2, "Talha", new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), 12, new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), "Talha", "Sick" });
 
             migrationBuilder.CreateIndex(
                 name: "IX_LeaveAllocations_LeaveTypeId",
